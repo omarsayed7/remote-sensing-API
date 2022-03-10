@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restplus import Api
 from endpoints.segmentation import namespace as segmentation_ns
-
+from endpoints.upload import namespace as upload_file
 blueprint = Blueprint('api', __name__, url_prefix='/api')
 api_extension = Api(blueprint, title='Remote Sensing AI',
                     version='1.0',
@@ -9,3 +9,4 @@ api_extension = Api(blueprint, title='Remote Sensing AI',
                     doc='/Swagger')
 
 api_extension.add_namespace(segmentation_ns)
+api_extension.add_namespace(upload_file)

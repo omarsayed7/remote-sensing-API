@@ -1,0 +1,14 @@
+werkzeug==0.16.1
+
+Flask==1.1.0
+Flask-Cors==3.0.10
+flask-ngrok==0.0.25
+flask-restplus==0.13.0
+scikit-image==0.16.2
+scikit-learn==0.24.2
+scikit-video==1.1.11
+opencv-python==4.2.0.34
+mahotas==1.4.12
+pickleshare==0.7.5
+progressbar==2.5
+GDAL==3.2.3
