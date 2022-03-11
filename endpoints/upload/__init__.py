@@ -38,10 +38,10 @@ def extract(ras_ds):
     latlong = []
     point1 = t.TransformPoint(minx, miny)
     point2 = t.TransformPoint(maxx, maxy)
-    latlong.append(point1[1])
     latlong.append(point1[0])
-    latlong.append(point2[1])
+    latlong.append(point1[1])
     latlong.append(point2[0])
+    latlong.append(point2[1])
     return latlong
 
 
