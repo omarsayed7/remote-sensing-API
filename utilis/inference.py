@@ -116,8 +116,12 @@ def fake_img_resp():
     return img
 
 
-def inference(classifier, h_neighbors=11):
-    img = imread('utilis/tmp/tmp.png')
+def inference(classifier, h_neighbors=11,upload_tmp=True):
+    if upload_tmp:
+        img=imread('utilis/tmp/tmp_upload.png')
+    else:
+        img = imread('utilis/tmp/tmp.png')
+
     start_time = time.time()
     print("_"*30)
     print('[INFO] Doing inference on test images...')

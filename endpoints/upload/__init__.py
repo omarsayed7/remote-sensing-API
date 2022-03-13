@@ -1,7 +1,10 @@
 import os
-from osgeo import osr,gdal
+try:
+    import osr, gdal
+except ImportError:
+    from osgeo import osr, gdal
 from werkzeug.utils import secure_filename
-from flask import request, jsonify
+from flask import request, jsonify, send_file
 from flask_restplus import Namespace, Resource
 from utilis.mapbox_request import mapbox_request
 
@@ -38,10 +41,10 @@ def extract(ras_ds):
     latlong = []
     point1 = t.TransformPoint(minx, miny)
     point2 = t.TransformPoint(maxx, maxy)
-    latlong.append(point1[1])
     latlong.append(point1[0])
-    latlong.append(point2[1])
+    latlong.append(point1[1])
     latlong.append(point2[0])
+    latlong.append(point2[1])
     return latlong
 
 
@@ -49,21 +52,26 @@ def extract(ras_ds):
 class Upload(Resource):
     @namespace.response(500, 'Internal Server error')
     def post(self):
-        print(request.files)
+        print(request.files,"555555555555555555")
         if 'file' not in request.files:
             resp = jsonify({'message': 'No file part in the request'})
             resp.status_code = 400
+            print("first")
             return resp
         file = request.files['file']
         if file.filename == '':
             resp = jsonify({'message': 'No file selected for uploading'})
             resp.status_code = 400
+            print("second")
             return resp
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
+            print("third")
             file.save(os.path.join(upload_path, filename))
             latlong = extract(gdal.Open(os.path.join(upload_path, filename)))
-            response = mapbox_request(latlong,512,512)
+            print("12")
+            #print(latlong)
+            response = mapbox_request(latlong,512,512,uploaded=True)
             print(response)
             resp = jsonify({'message': 'File successfully uploaded'})
             resp.status_code = 201
@@ -72,3 +80,6 @@ class Upload(Resource):
             resp = jsonify({'message': 'Allowed file types are txt, pdf, png, jpg, jpeg, gif'})
             resp.status_code = 400
             return resp
+    def get(self):
+        return send_file('utilis/tmp/mask.jpg',as_attachment=True,attachment_filename='mask.jpg',mimetype='image/jpeg'),\
+               send_file('utilis/tmp/bbox.txt',as_attachment=True,attachment_filename='bbox.txt',)
