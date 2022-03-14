@@ -52,7 +52,7 @@ def extract(ras_ds):
 class Upload(Resource):
     @namespace.response(500, 'Internal Server error')
     def post(self):
-        print(request.files,"555555555555555555")
+        print(request.files)
         if 'file' not in request.files:
             resp = jsonify({'message': 'No file part in the request'})
             resp.status_code = 400
@@ -69,11 +69,10 @@ class Upload(Resource):
             print("third")
             file.save(os.path.join(upload_path, filename))
             latlong = extract(gdal.Open(os.path.join(upload_path, filename)))
-            print("12")
             #print(latlong)
             response = mapbox_request(latlong,512,512,uploaded=True)
             print(response)
-            resp = jsonify({'message': 'File successfully uploaded'})
+            resp = jsonify({'message': 'File successfully uploaded'},{'bbox':"[["+str(latlong[0])+","+str(latlong[1])+"],["+str(latlong[2])+","+str(latlong[3])+"]]"})
             resp.status_code = 201
             return resp
         else:
@@ -82,4 +81,3 @@ class Upload(Resource):
             return resp
     def get(self):
         return send_file('utilis/tmp/mask.jpg',as_attachment=True,attachment_filename='mask.jpg',mimetype='image/jpeg'),\
-               send_file('utilis/tmp/bbox.txt',as_attachment=True,attachment_filename='bbox.txt',)
