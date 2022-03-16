@@ -112,7 +112,7 @@ def extract_features(img, img_gary, label, train, lbp_radius=10, lbp_points_rati
 
 
 def fake_img_resp():
-    img = imread('utilis/tmp/mask.jpg')
+    img = imread('utilis/tmp/thematic_layer.jpg')
     return img
 
 
@@ -149,5 +149,5 @@ def inference(classifier, h_neighbors=11,upload_tmp=True):
     pred_img = prediction.reshape(size_pred, size_pred)
     end_time = time.time()
     print('predection time: %.4f s' % (end_time-start_time))
-    cv2.imwrite('utilis/tmp/mask.jpg', pred_img*255)
+    cv2.imwrite('utilis/tmp/thematic_layer.jpg', pred_img*255)
     return pred_img

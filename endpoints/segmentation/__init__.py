@@ -24,7 +24,7 @@ segmentation_model = namespace.model('SegModel', {
     ),
     'PostProcessing': fields.String(
         required=True,
-        description="Choose from two options (download output mask or show the mask on the map"
+        description="Choose from two options (download output thematic layer or show the thematic layer on the map"
     )
 })
 
@@ -45,13 +45,13 @@ class Segmentaion(Resource):
         print(bbox, width, height)
         response = mapbox_request(bbox, width, height,uploaded=False)
         print(response)
-        prediction_img = inference(classifier=algorithm)
+        prediction_img = inference(classifier=algorithm,upload_tmp=False)
         return jsonify({'status': str("testtt")})
 
     def get(self):
         return send_file(
-            'utilis/tmp/mask.jpg',
+            'utilis/tmp/thematic_layer.jpg',
             as_attachment=True,
-            attachment_filename='mask.jpg',
+            attachment_filename='thematic_layer.jpg',
             mimetype='image/jpeg'
         )

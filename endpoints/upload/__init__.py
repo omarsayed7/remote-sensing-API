@@ -45,7 +45,7 @@ def extract(ras_ds):
     latlong.append(point1[1])
     latlong.append(point2[0])
     latlong.append(point2[1])
-    return latlong
+    return latlong,width,height
 
 
 @namespace.route('')
@@ -68,7 +68,7 @@ class Upload(Resource):
             filename = secure_filename(file.filename)
             print("third")
             file.save(os.path.join(upload_path, filename))
-            latlong = extract(gdal.Open(os.path.join(upload_path, filename)))
+            latlong,width,height = extract(gdal.Open(os.path.join(upload_path, filename)))
             #print(latlong)
             response = mapbox_request(latlong,512,512,uploaded=True)
             print(response)
@@ -79,5 +79,4 @@ class Upload(Resource):
             resp = jsonify({'message': 'Allowed file types are txt, pdf, png, jpg, jpeg, gif'})
             resp.status_code = 400
             return resp
-    def get(self):
-        return send_file('utilis/tmp/mask.jpg',as_attachment=True,attachment_filename='mask.jpg',mimetype='image/jpeg'),\
+    
