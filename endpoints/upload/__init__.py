@@ -69,8 +69,8 @@ class Upload(Resource):
             print("third")
             file.save(os.path.join(upload_path, filename))
             latlong,width,height = extract(gdal.Open(os.path.join(upload_path, filename)))
-            #print(latlong)
-            response = mapbox_request(latlong,512,512,uploaded=True)
+            print(width,height)
+            response = mapbox_request(latlong,512,512,uploaded=True)    #max size for image is 1280x1280 (mapbox standard)
             print(response)
             resp = jsonify({'message': 'File successfully uploaded'},{'bbox':"[["+str(latlong[0])+","+str(latlong[1])+"],["+str(latlong[2])+","+str(latlong[3])+"]]"})
             resp.status_code = 201
