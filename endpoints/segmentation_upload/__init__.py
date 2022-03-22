@@ -9,7 +9,7 @@ from utilis.mapbox_request import mapbox_request
 
 namespace = Namespace('segmentation-upload', 'Segmentation Upload APIs')
 
-segmentation_model = namespace.model('SegModel', {
+segmentation_model = namespace.model('SegModel_upload', {
     'Algorithm': fields.String(
         required=True,
         description="Machine Learning Algorithm"
@@ -33,7 +33,6 @@ class Segmentaion_Upload(Resource):
         postProcessing = data['PostProcessing']
         prediction_img = inference(classifier=algorithm)
         return jsonify({'status': str("testtt")})
+
     def get(self):
-        return send_file('utilis/tmp/thematic_layer.jpg',as_attachment=True,attachment_filename='thematic_layer.jpg',mimetype='image/jpeg')
-
-
+        return send_file('utilis/tmp/thematic_layer.jpg', as_attachment=True, attachment_filename='thematic_layer.jpg', mimetype='image/jpeg')

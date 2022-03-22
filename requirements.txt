@@ -11,4 +11,3 @@ opencv-python==4.2.0.34
 mahotas==1.4.12
 pickleshare==0.7.5
 progressbar==2.5
-GDAL==3.2.3
