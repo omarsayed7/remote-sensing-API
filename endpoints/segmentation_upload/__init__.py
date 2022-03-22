@@ -24,15 +24,16 @@ segmentation_model = namespace.model('SegModel_upload', {
 @namespace.route('')
 class Segmentaion_Upload(Resource):
     @namespace.response(500, 'Internal Server error')
+    @namespace.response(201, 'Created')
     @namespace.expect(segmentation_model)
-    @namespace.marshal_with(segmentation_model, code=HTTPStatus.CREATED)
+    # @namespace.marshal_with(segmentation_model, code=201, description='Object created')
     def post(self):
         '''Post method for segmentation of an given lat/long bounding box'''
         data = request.json
         algorithm = data['Algorithm']
         postProcessing = data['PostProcessing']
         prediction_img = inference(classifier=algorithm)
-        return jsonify({'status': str("testtt")})
+        return {'message': "Created!"}, 201
 
     def get(self):
         return send_file('utilis/tmp/thematic_layer.jpg', as_attachment=True, attachment_filename='thematic_layer.jpg', mimetype='image/jpeg')

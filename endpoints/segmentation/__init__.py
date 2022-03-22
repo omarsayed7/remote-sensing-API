@@ -33,7 +33,7 @@ segmentation_model = namespace.model('SegModel', {
 class Segmentaion(Resource):
     @namespace.response(500, 'Internal Server error')
     @namespace.expect(segmentation_model)
-    @namespace.marshal_with(segmentation_model, code=HTTPStatus.CREATED)
+    # @namespace.marshal_with(segmentation_model, code=HTTPStatus.CREATED)
     def post(self):
         '''Post method for segmentation of an given lat/long bounding box'''
         data = request.json
@@ -43,10 +43,10 @@ class Segmentaion(Resource):
         algorithm = data['Algorithm']
         postProcessing = data['PostProcessing']
         print(bbox, width, height)
-        response = mapbox_request(bbox, width, height,uploaded=False)
+        response = mapbox_request(bbox, width, height, uploaded=False)
         print(response)
-        prediction_img = inference(classifier=algorithm,upload_tmp=False)
-        return jsonify({'status': str("testtt")})
+        prediction_img = inference(classifier=algorithm, upload_tmp=False)
+        return {'message': "Created!"}, 201
 
     def get(self):
         return send_file(
