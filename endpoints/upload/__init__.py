@@ -1,6 +1,7 @@
 import os
 try:
-    import osr, gdal
+    import osr
+    import gdal
 except ImportError:
     from osgeo import osr, gdal
 from werkzeug.utils import secure_filename
@@ -41,11 +42,11 @@ def extract(ras_ds):
     latlong = []
     point1 = t.TransformPoint(minx, miny)
     point2 = t.TransformPoint(maxx, maxy)
-    latlong.append(point1[0])
     latlong.append(point1[1])
-    latlong.append(point2[0])
+    latlong.append(point1[0])
     latlong.append(point2[1])
-    return latlong,width,height
+    latlong.append(point2[0])
+    return latlong, width, height
 
 
 @namespace.route('')
@@ -68,18 +69,23 @@ class Upload(Resource):
             filename = secure_filename(file.filename)
             print("third")
             file.save(os.path.join(upload_path, filename))
-            latlong,width,height = extract(gdal.Open(os.path.join(upload_path, filename)))
-            print(width,height)
+            latlong, width, height = extract(
+                gdal.Open(os.path.join(upload_path, filename)))
+            print(width, height)
             if width > 1280 or height > 1280:
-                response = mapbox_request(latlong,int(width/10),int(height/10),uploaded=True)    #max size for image is 1280x1280 (mapbox standard)
+                # max size for image is 1280x1280 (mapbox standard)
+                response = mapbox_request(latlong, int(
+                    width/10), int(height/10), uploaded=True)
             else:
-                response = mapbox_request(latlong,width,height,uploaded=True)
+                response = mapbox_request(
+                    latlong, width, height, uploaded=True)
             print(response)
-            resp = jsonify({'message': 'File successfully uploaded'},{'bbox':"[["+str(latlong[0])+","+str(latlong[1])+"],["+str(latlong[2])+","+str(latlong[3])+"]]"})
+            resp = jsonify({'message': 'File successfully uploaded'}, {
+                           'bbox': "[["+str(latlong[0])+","+str(latlong[1])+"],["+str(latlong[2])+","+str(latlong[3])+"]]"})
             resp.status_code = 201
             return resp
         else:
-            resp = jsonify({'message': 'Allowed file types are txt, pdf, png, jpg, jpeg, gif'})
+            resp = jsonify(
+                {'message': 'Allowed file types are txt, pdf, png, jpg, jpeg, gif'})
             resp.status_code = 400
             return resp
-    
