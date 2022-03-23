@@ -5,7 +5,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
-run_with_ngrok(app)
+#run_with_ngrok(app)
 app.register_blueprint(segmentation_endpoint)
 
 if __name__ == '__main__':

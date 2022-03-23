@@ -49,6 +49,7 @@ def extract_features(img, img_gary, label, train, lbp_radius=10, lbp_points_rati
         else:
             bar = progressbar.ProgressBar(maxval=len(ss_idx),
                                           widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
+            
 
         def calculate_haralick(img):
             '''
@@ -64,6 +65,7 @@ def extract_features(img, img_gary, label, train, lbp_radius=10, lbp_points_rati
             return np.array(features)
 
         bar.start()
+        
         h_features = []
 
         if len(ss_idx) == 0:
@@ -119,9 +121,13 @@ def fake_img_resp():
 def inference(classifier, h_neighbors=11,upload_tmp=True):
     if upload_tmp:
         img=imread('utilis/tmp/tmp_upload.png')
+        
     else:
         img = imread('utilis/tmp/tmp.png')
-
+        
+    width = img.shape[0]
+    height = img.shape[1]
+    print(width,height,"ksdnoinwoinsdfn")
     start_time = time.time()
     print("_"*30)
     print('[INFO] Doing inference on test images...')
@@ -146,7 +152,7 @@ def inference(classifier, h_neighbors=11,upload_tmp=True):
     Feature.append(features)
     prediction = model.predict(features.reshape((-1, features.shape[1])))
     size_pred = int(math.sqrt(features.shape[0]))
-    pred_img = prediction.reshape(size_pred, size_pred)
+    pred_img = prediction.reshape(width, height)
     end_time = time.time()
     print('predection time: %.4f s' % (end_time-start_time))
     cv2.imwrite('utilis/tmp/thematic_layer.jpg', pred_img*255)
