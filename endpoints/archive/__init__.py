@@ -1,12 +1,17 @@
 from http.client import HTTPResponse
 from socket import socket
-from flask import request, Response, send_file, jsonify
+from flask import request, Response, send_file, jsonify,make_response
 from flask_restplus import Namespace, Resource, fields
 from http import HTTPStatus
 from numpy import require
 from PIL import Image
 from utilis.inference import inference, fake_img_resp
 from utilis.mapbox_request import mapbox_request
+try:
+    import osr
+    import gdal
+except ImportError:
+    from osgeo import osr, gdal
 
 namespace = Namespace('archive', 'Archived Images')
 
@@ -19,7 +24,9 @@ archive = namespace.model('Archive', {
         required=True,
         description="Year of the classification"
     ),
+    
 })
+
 
 def extract(ras_ds):
     geot = ras_ds.GetGeoTransform()
@@ -57,18 +64,30 @@ class Archive(Resource):
         data = request.json
         year = data['Year']
         algorithm = data['Algorithm']
-        return {'message': "Created!"}, 201
+        filename = 'utilis/tmp/archived/'+year+'/'+algorithm+year+'.tif'
+        open('utilis/tmp/archive.txt', 'w').close()
+        archive_file = open("utilis/tmp/archive.txt", "a")
+        archive_file.write(filename)
+        archive_file.close()
+        col_matrix=open('utilis/tmp/archived/'+year+'/'+algorithm+year+'.txt').readlines()
+        latlong=extract(gdal.Open(filename))
+        resp = resp = jsonify({'message': "Created!"},{'col_matrix': col_matrix}, {
+                           'bbox': "[["+str(latlong[0])+","+str(latlong[1])+"],["+str(latlong[2])+","+str(latlong[3])+"]]"})
+        resp.status_code = 201
+        return resp
 
     def get(self):
-        data = request.json
-        year = data['Year']
-        algorithm = data['Algorithm']
+        # data = request.json
+        # print(request,"45645135")
+        # year = data['Year']
+        # algorithm = data['Algorithm']
+        
         try:
-           filename = 'utilis/tmp/archived/'+year+'/'+algorithm+year+'.tif'
-           #latlong=extract(filename)
-           img=Image.open(filename)
+           filename = open('utilis/tmp/archive.txt').readlines()
+           print(filename,"189456154")
+        #    filename = 'utilis/tmp/archived/'+year+'/'+algorithm+year+'.tif'
+           img=Image.open(filename[0])
            img.save("utilis/tmp/archive.png")
-
         except FileNotFoundError:
             print("Wrong file or file path")
         return send_file("utilis/tmp/archive.png", as_attachment=True, attachment_filename="archive.png", mimetype='image/jpeg')
