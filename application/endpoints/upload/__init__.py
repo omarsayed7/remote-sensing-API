@@ -12,7 +12,7 @@ from application.utilis.mapbox_request import mapbox_request
 namespace = Namespace('upload-file', 'Upload File')
 
 ALLOWED_EXTENSIONS = set(['img', 'tif', 'tiff', 'gutiff', 'disk'])
-upload_path = 'utilis/tmp/uploads'
+upload_path = 'application/utilis/tmp/uploads'
 
 secret_key = "secret key"
 max_size = 16 * 1024 * 1024
