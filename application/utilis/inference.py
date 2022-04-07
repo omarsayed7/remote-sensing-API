@@ -8,9 +8,9 @@ import progressbar
 from numpy.lib import stride_tricks
 import pickle
 import math
-SVM_PATH = 'utilis/models/SVM_model_kaggle .pkl'
-DT_PATH = 'utilis/models/model_DT.pkl'
-RF_PATH = 'utilis/models/RF_model_1000.pkl'
+SVM_PATH = 'applictaion/utilis/models/SVM_model_kaggle .pkl'
+DT_PATH = 'application/utilis/models/model_DT.pkl'
+RF_PATH = 'application/utilis/models/RF_model_1000.pkl'
 
 
 def extract_features(img, img_gary, label, train, lbp_radius=10, lbp_points_ratio=4, h_neighbors=11, num_examples=10000):
@@ -114,16 +114,16 @@ def extract_features(img, img_gary, label, train, lbp_radius=10, lbp_points_rati
 
 
 def fake_img_resp():
-    img = imread('utilis/tmp/thematic_layer.jpg')
+    img = imread('application/utilis/tmp/thematic_layer.jpg')
     return img
 
 
 def inference(classifier, h_neighbors=11,upload_tmp=True):
     if upload_tmp:
-        img=imread('utilis/tmp/tmp_upload.png')
+        img=imread('application/utilis/tmp/tmp_upload.png')
         
     else:
-        img = imread('utilis/tmp/tmp.png')
+        img = imread('application/utilis/tmp/tmp.png')
         
     width = img.shape[0]
     height = img.shape[1]
@@ -155,5 +155,5 @@ def inference(classifier, h_neighbors=11,upload_tmp=True):
     pred_img = prediction.reshape(width, height)
     end_time = time.time()
     print('predection time: %.4f s' % (end_time-start_time))
-    cv2.imwrite('utilis/tmp/thematic_layer.jpg', pred_img*255)
+    cv2.imwrite('application/utilis/tmp/thematic_layer.jpg', pred_img*255)
     return pred_img

@@ -65,12 +65,12 @@ class Archive(Resource):
         data = request.json
         year = data['Year']
         algorithm = data['Algorithm']
-        filename = 'utilis/tmp/archived/'+year+'/'+algorithm+year+'.tif'
-        open('utilis/tmp/archive.txt', 'w').close()
-        archive_file = open("utilis/tmp/archive.txt", "a")
+        filename = 'application/utilis/tmp/archived/'+year+'/'+algorithm+year+'.tif'
+        open('application/utilis/tmp/archive.txt', 'w').close()
+        archive_file = open("application/utilis/tmp/archive.txt", "a")
         archive_file.write(filename)
         archive_file.close()
-        col_matrix = open('utilis/tmp/archived/'+year+'/' +
+        col_matrix = open('application/utilis/tmp/archived/'+year+'/' +
                           algorithm+year+'.txt').readlines()
         latlong = extract(gdal.Open(filename))
         resp = resp = jsonify({'message': "Created!"}, {'col_matrix': col_matrix}, {
@@ -85,11 +85,11 @@ class Archive(Resource):
         # algorithm = data['Algorithm']
 
         try:
-            filename = open('utilis/tmp/archive.txt').readlines()
+            filename = open('application/utilis/tmp/archive.txt').readlines()
             print(filename, "189456154")
         #    filename = 'utilis/tmp/archived/'+year+'/'+algorithm+year+'.tif'
             img = Image.open(filename[0])
-            img.save("utilis/tmp/archive.png")
+            img.save("application/utilis/tmp/archive.png")
         except FileNotFoundError:
             print("Wrong file or file path")
-        return send_file("utilis/tmp/archive.png", as_attachment=True, attachment_filename="archive.png", mimetype='image/jpeg')
+        return send_file("application/utilis/tmp/archive.png", as_attachment=True, attachment_filename="archive.png", mimetype='image/jpeg')
