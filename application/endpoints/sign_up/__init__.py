@@ -1,7 +1,7 @@
 from flask import request
 from flask_restplus import Namespace, Resource, fields
-# from application import db
-# from application.models import User
+from application import db
+from application.entities import User
 
 namespace = Namespace('sign-up', 'Getting sign-up data')
 
@@ -43,9 +43,7 @@ class Sign_Up(Resource):
         username = data['Username']
         email = data['Email']
         password = data['Password']
-        print(name, username, email, password)
-        # print(User.query.all())
-        # new_user = User(name, username, email, password)
-        # db.session.add(new_user)
-        # db.session.commit()
+        new_user = User(name, username, email, password)
+        db.session.add(new_user)
+        db.session.commit()
         return {'message': "Created!"}, 201

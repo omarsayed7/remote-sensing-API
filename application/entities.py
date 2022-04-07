@@ -23,7 +23,7 @@ class User(db.Model):
 
 
     def __repr__(self):
-        return '<User %r>' % (self.name)
+        return '<User %r>' % (self.id)
 
 class Contact(db.Model):
     # New instance instantiation procedure
@@ -46,4 +46,4 @@ class Contact(db.Model):
 
 
     def __repr__(self):
-        return '<Contact %r>' % (self.name)
+        return '<Contact %r>' % (self.id)
