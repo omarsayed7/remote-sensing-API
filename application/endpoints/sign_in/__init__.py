@@ -29,6 +29,6 @@ class Sign_In(Resource):
         password = data['Password']
         user = User.query.filter(User.userName == username).first().query.filter(User.password == password).first()
         if user:
-            return {'message': "Created!"}, 201
+            return {'message': "LoggedIn"}, 200
         else:
             return {"message": "User not found"}, 404

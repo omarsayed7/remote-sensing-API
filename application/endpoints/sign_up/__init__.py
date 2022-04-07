@@ -43,7 +43,15 @@ class Sign_Up(Resource):
         username = data['Username']
         email = data['Email']
         password = data['Password']
-        new_user = User(name, username, email, password)
-        db.session.add(new_user)
-        db.session.commit()
-        return {'message': "Created!"}, 201
+        isEmail = User.query.filter(User.email == email).first()
+        if not isEmail:
+            isUserName = User.query.filter(User.userName == username).first()
+            if not isUserName:
+                new_user = User(name, username, email, password)
+                db.session.add(new_user)
+                db.session.commit()
+                return {'message': "Created!"}, 201
+            else:
+                return {'message': "User is already exists"}, 405
+        else:
+            return {'message': "User is already exists"}, 405
