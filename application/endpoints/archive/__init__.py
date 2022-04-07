@@ -92,4 +92,4 @@ class Archive(Resource):
             img.save("application/utilis/tmp/archive.png")
         except FileNotFoundError:
             print("Wrong file or file path")
-        return send_file("application/utilis/tmp/archive.png", as_attachment=True, attachment_filename="archive.png", mimetype='image/jpeg')
+        return send_file("utilis/tmp/archive.png", as_attachment=True, attachment_filename="archive.png", mimetype='image/jpeg')
