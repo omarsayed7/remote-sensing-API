@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://hexykuftyxhmza:137066fd386156ba6ea41c4af44e4319e079877b59a6b1f8586fe486b9396cb6@ec2-52-48-159-67.eu-west-1.compute.amazonaws.com:5432/d3c3mlb83bbmcq'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://nfjascluiygyic:e848835da75e1cf517713aecbc0007f1f4764adc27940fd2b1942d138dcf4145@ec2-99-81-137-11.eu-west-1.compute.amazonaws.com:5432/d7cdtdp01s763u'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = 'hi'
 

@@ -36,4 +36,4 @@ class Segmentaion_Upload(Resource):
         return {'message': "Created!"}, 201
 
     def get(self):
-        return send_file('application/utilis/tmp/thematic_layer.jpg', as_attachment=True, attachment_filename='thematic_layer.jpg', mimetype='image/jpeg')
+        return send_file('utilis/tmp/thematic_layer.jpg', as_attachment=True, attachment_filename='thematic_layer.jpg', mimetype='image/jpeg')

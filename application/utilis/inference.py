@@ -8,9 +8,12 @@ import progressbar
 from numpy.lib import stride_tricks
 import pickle
 import math
-SVM_PATH = 'application/utilis/models/SVM_model_kaggle .pkl'
-DT_PATH = 'application/utilis/models/model_DT.pkl'
-RF_PATH = 'application/utilis/models/RF_model_1000.pkl'
+from tensorflow import keras
+from skimage.transform import resize 
+import cv2
+
+CNN_PATH = 'application/utilis/models/unet2017-v1.h5'
+
 
 
 def extract_features(img, img_gary, label, train, lbp_radius=10, lbp_points_ratio=4, h_neighbors=11, num_examples=10000):
@@ -127,33 +130,41 @@ def inference(classifier, h_neighbors=11,upload_tmp=True):
         
     width = img.shape[0]
     height = img.shape[1]
-    print(width,height,"ksdnoinwoinsdfn")
+    print(classifier,"ksdnoinwoinsdfn")
     start_time = time.time()
     print("_"*30)
     print('[INFO] Doing inference on test images...')
     print('loading trained model.')
 
-    border = int((h_neighbors-1)/2)
-    Feature = []
+    
     print('infer for image')
-    if classifier == 'SVM':
-        model = pickle.load(open(SVM_PATH, 'rb'))
-    if classifier == 'DT':
-        model = pickle.load(open(DT_PATH, 'rb'))
-    if classifier == 'RF':
-        model = pickle.load(open(RF_PATH, 'rb'))
-
-    img = cv2.copyMakeBorder(img, top=border, bottom=border,
-                             left=border, right=border,
-                             borderType=cv2.BORDER_CONSTANT,
-                             value=[0, 0, 0])
-    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    features, _ = extract_features(img, img_gray, label=None, train=False)
-    Feature.append(features)
-    prediction = model.predict(features.reshape((-1, features.shape[1])))
-    size_pred = int(math.sqrt(features.shape[0]))
-    pred_img = prediction.reshape(width, height)
-    end_time = time.time()
-    print('predection time: %.4f s' % (end_time-start_time))
-    cv2.imwrite('application/utilis/tmp/thematic_layer.jpg', pred_img*255)
+    if classifier == 'CNN':
+        model = keras.models.load_model(CNN_PATH)
+        test_resized = resize(img, (256,256))
+        test_tensor = (np.expand_dims(test_resized,0)) / 255.0
+        pred_img = model.predict(test_tensor)
+        pred_img = np.squeeze(pred_img,0)
+        pred_img = np.argmax(pred_img,-1)
+        #pred_img = pred_img.reshape(width, height)
+        end_time = time.time()
+        print('predection time: %.4f s' % (end_time-start_time))
+        cv2.imwrite('application/utilis/tmp/thematic_layer.jpg', pred_img*255)
+        
+    elif classifier == 'SVM' or classifier =='DT' or classifier =='RF':
+        border = int((h_neighbors-1)/2)
+        Feature = []
+        model = pickle.load(open('application/utilis/models/model_'+classifier+'.pkl', 'rb'))
+        img = cv2.copyMakeBorder(img, top=border, bottom=border,
+                                left=border, right=border,
+                                borderType=cv2.BORDER_CONSTANT,
+                                value=[0, 0, 0])
+        img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        features, _ = extract_features(img, img_gray, label=None, train=False)
+        Feature.append(features)
+        prediction = model.predict(features.reshape((-1, features.shape[1])))
+        size_pred = int(math.sqrt(features.shape[0]))
+        pred_img = prediction.reshape(width, height)
+        end_time = time.time()
+        print('predection time: %.4f s' % (end_time-start_time))
+        cv2.imwrite('application/utilis/tmp/thematic_layer.jpg', pred_img*255)
     return pred_img

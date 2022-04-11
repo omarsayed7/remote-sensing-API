@@ -50,7 +50,7 @@ class Segmentaion(Resource):
 
     def get(self):
         return send_file(
-            'application/utilis/tmp/thematic_layer.jpg',
+            'utilis/tmp/thematic_layer.jpg',
             as_attachment=True,
             attachment_filename='thematic_layer.jpg',
             mimetype='image/jpeg'
